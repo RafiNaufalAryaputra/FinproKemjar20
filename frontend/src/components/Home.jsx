@@ -7,6 +7,7 @@ const Home = () => {
     const [todos, setTodos] = useState([]);
     const [task, setTask] = useState('');
     const [newPassword, setNewPassword] = useState('');
+    const [currentPassword, setCurrentPassword] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,9 +31,14 @@ const Home = () => {
     };
 
     const changePassword = async () => {
-        await API.post('/change-password', { userId, newPassword });
-        alert('Password changed successfully');
-        setNewPassword('');
+        try {
+            await API.post('/change-password', { userId, currentPassword, newPassword });
+            alert('Password changed successfully');
+            setNewPassword('');
+            setCurrentPassword('');
+        } catch (err) {
+            alert(err.response?.data?.message || 'Password change failed');
+        }
     };
 
     const handleLogout = () => {
@@ -72,6 +78,7 @@ const Home = () => {
                     </ul>
 
                     <div style={{marginTop:18}}>
+                        <input className="input" type="password" placeholder="Current Password" value={currentPassword} onChange={(e)=>setCurrentPassword(e.target.value)} />
                         <input className="input" type="password" placeholder="New Password" value={newPassword} onChange={(e)=>setNewPassword(e.target.value)} />
                         <div style={{marginTop:8}}>
                             <button className="button" onClick={changePassword}>Change Password</button>

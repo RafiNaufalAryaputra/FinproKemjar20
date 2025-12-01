@@ -10,6 +10,8 @@ const Login = () => {
     const handleLogin = async () => {
         try {
             const response = await API.post('/login', { username, password });
+            // Save token and userId
+            localStorage.setItem('token', response.data.token);
             localStorage.setItem('userId', response.data.userId);
             navigate('/home');
         } catch (error) {
